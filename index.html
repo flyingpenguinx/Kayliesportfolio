@@ -20,8 +20,30 @@
   </header>
 
   <section class="hero">
-    <h1>Hi, I'm Kaylie</h1>
-    <p>Welcome to my portfolio — more coming soon!</p>
+    <div class="hero-content">
+      <h1>Hi, I'm Kaylie</h1>
+      <p>Welcome to my portfolio — more coming soon!</p>
+    </div>
+    <div class="skyscraper-container">
+      <svg id="skyscraper" viewBox="0 0 300 520" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="towerBody" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%"  stop-color="#3b0764" stop-opacity="0.95"/>
+            <stop offset="18%" stop-color="#5b21b6" stop-opacity="0.9"/>
+            <stop offset="35%" stop-color="#c4b5fd" stop-opacity="0.45"/>
+            <stop offset="46%" stop-color="#ede9fe" stop-opacity="0.7"/>
+            <stop offset="55%" stop-color="#a78bfa" stop-opacity="0.8"/>
+            <stop offset="72%" stop-color="#6d28d9" stop-opacity="0.85"/>
+            <stop offset="100%" stop-color="#3b0764" stop-opacity="0.92"/>
+          </linearGradient>
+          <linearGradient id="towerGlow" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0%"  stop-color="#1e1b4b" stop-opacity="0.3"/>
+            <stop offset="50%" stop-color="#7c3aed" stop-opacity="0.06"/>
+            <stop offset="100%" stop-color="#e9d5ff" stop-opacity="0.15"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
   </section>
 
   <section id="about" class="section">
@@ -55,6 +77,171 @@
   <footer>
     <p>&copy; 2026 Kaylie. All rights reserved.</p>
   </footer>
+
+  <script>
+  (function () {
+    var svg = document.getElementById('skyscraper');
+    var ns  = 'http://www.w3.org/2000/svg';
+
+    var cx     = 150;       // centre x
+    var baseY  = 490;       // ground level
+    var nFloors = 28;       // number of floor slabs
+    var floorH = 14.5;      // height per floor
+    var baseHW = 58;        // half-width at base
+    var topHW  = 24;        // half-width at top
+    var totalTwist = 90;    // total twist degrees over full height
+    var maxShift = 22;      // max horizontal pixel shift from twist
+
+    // For each floor i, compute the floor-plate properties
+    function floorAt(i) {
+      var t  = i / nFloors;  // 0 at base, 1 at top
+      var y  = baseY - i * floorH;
+      var hw = baseHW + (topHW - baseHW) * t;  // linear taper
+      var angle = totalTwist * t;               // twist angle in degrees
+      // Project the twist as a horizontal shift (what you'd see from the front)
+      var dx = maxShift * Math.sin(angle * Math.PI / 180);
+      return { y: y, cx: cx + dx, hw: hw,
+               l: cx + dx - hw, r: cx + dx + hw };
+    }
+
+    // ── ground shadow ──
+    var shadow = document.createElementNS(ns, 'ellipse');
+    shadow.setAttribute('cx', cx);
+    shadow.setAttribute('cy', baseY + 8);
+    shadow.setAttribute('rx', 72);
+    shadow.setAttribute('ry', 7);
+    shadow.setAttribute('fill', 'rgba(0,0,0,0.18)');
+    shadow.setAttribute('class', 'tower-shadow');
+    svg.appendChild(shadow);
+
+    // ── tower group ──
+    var tg = document.createElementNS(ns, 'g');
+    tg.setAttribute('class', 'tower-body-group');
+
+    // Build left & right edge as straight segments between floor corners
+    var leftPts = [], rightPts = [];
+    for (var i = 0; i <= nFloors; i++) {
+      var f = floorAt(i);
+      leftPts.push(f.l.toFixed(1) + ',' + f.y.toFixed(1));
+      rightPts.push(f.r.toFixed(1) + ',' + f.y.toFixed(1));
+    }
+    // Close: top-left → top-right down the right side → back to base-left
+    var outlineD = 'M' + leftPts.join(' L') + ' L' + rightPts.reverse().join(' L') + ' Z';
+
+    // Main body fill
+    var body = document.createElementNS(ns, 'path');
+    body.setAttribute('d', outlineD);
+    body.setAttribute('fill', 'url(#towerBody)');
+    tg.appendChild(body);
+
+    // Glow overlay
+    var glow = document.createElementNS(ns, 'path');
+    glow.setAttribute('d', outlineD);
+    glow.setAttribute('fill', 'url(#towerGlow)');
+    tg.appendChild(glow);
+
+    // Reflection strip (left ~20-45% of width)
+    rightPts.reverse(); // restore order
+    var refL = [], refR = [];
+    for (var i = 0; i <= nFloors; i++) {
+      var f = floorAt(i);
+      refL.push((f.l + f.hw * 0.20).toFixed(1) + ',' + f.y.toFixed(1));
+      refR.push((f.l + f.hw * 0.50).toFixed(1) + ',' + f.y.toFixed(1));
+    }
+    var refD = 'M' + refL.join(' L') + ' L' + refR.reverse().join(' L') + ' Z';
+    var refl = document.createElementNS(ns, 'path');
+    refl.setAttribute('d', refD);
+    refl.setAttribute('fill', 'rgba(255,255,255,0.10)');
+    tg.appendChild(refl);
+
+    // ── Sharp floor-plate lines ──
+    for (var i = 0; i <= nFloors; i++) {
+      var f = floorAt(i);
+      var fl = document.createElementNS(ns, 'line');
+      fl.setAttribute('x1', f.l.toFixed(1));
+      fl.setAttribute('y1', f.y.toFixed(1));
+      fl.setAttribute('x2', f.r.toFixed(1));
+      fl.setAttribute('y2', f.y.toFixed(1));
+      fl.setAttribute('stroke', 'rgba(255,255,255,0.28)');
+      fl.setAttribute('stroke-width', i === 0 ? '1.5' : '0.7');
+      tg.appendChild(fl);
+    }
+
+    // ── Sharp diagonal edge lines between floors ──
+    for (var i = 0; i < nFloors; i++) {
+      var fb = floorAt(i), ft = floorAt(i + 1);
+
+      // Left edge
+      var lnL = document.createElementNS(ns, 'line');
+      lnL.setAttribute('x1', fb.l.toFixed(1));
+      lnL.setAttribute('y1', fb.y.toFixed(1));
+      lnL.setAttribute('x2', ft.l.toFixed(1));
+      lnL.setAttribute('y2', ft.y.toFixed(1));
+      lnL.setAttribute('stroke', 'rgba(255,255,255,0.4)');
+      lnL.setAttribute('stroke-width', '1.0');
+      tg.appendChild(lnL);
+
+      // Right edge
+      var lnR = document.createElementNS(ns, 'line');
+      lnR.setAttribute('x1', fb.r.toFixed(1));
+      lnR.setAttribute('y1', fb.y.toFixed(1));
+      lnR.setAttribute('x2', ft.r.toFixed(1));
+      lnR.setAttribute('y2', ft.y.toFixed(1));
+      lnR.setAttribute('stroke', 'rgba(255,255,255,0.22)');
+      lnR.setAttribute('stroke-width', '0.8');
+      tg.appendChild(lnR);
+    }
+
+    // ── Window mullions (vertical dividers within each floor) ──
+    for (var i = 0; i < nFloors; i++) {
+      var fb = floorAt(i), ft = floorAt(i + 1);
+      for (var mi = 1; mi <= 5; mi++) {
+        var frac = mi / 6;
+        var ml = document.createElementNS(ns, 'line');
+        ml.setAttribute('x1', (fb.l + frac * fb.hw * 2).toFixed(1));
+        ml.setAttribute('y1', fb.y.toFixed(1));
+        ml.setAttribute('x2', (ft.l + frac * ft.hw * 2).toFixed(1));
+        ml.setAttribute('y2', ft.y.toFixed(1));
+        ml.setAttribute('stroke', 'rgba(255,255,255,0.06)');
+        ml.setAttribute('stroke-width', '0.35');
+        tg.appendChild(ml);
+      }
+    }
+
+    // ── Clean flat rooftop ──
+    var top = floorAt(nFloors);
+    var roofRect = document.createElementNS(ns, 'rect');
+    roofRect.setAttribute('x', (top.l + 2).toFixed(1));
+    roofRect.setAttribute('y', (top.y - 4).toFixed(1));
+    roofRect.setAttribute('width', (top.hw * 2 - 4).toFixed(1));
+    roofRect.setAttribute('height', '4');
+    roofRect.setAttribute('fill', 'rgba(139,92,246,0.5)');
+    tg.appendChild(roofRect);
+
+    // Roof edge line
+    var roofLine = document.createElementNS(ns, 'line');
+    roofLine.setAttribute('x1', top.l.toFixed(1));
+    roofLine.setAttribute('y1', (top.y - 4).toFixed(1));
+    roofLine.setAttribute('x2', top.r.toFixed(1));
+    roofLine.setAttribute('y2', (top.y - 4).toFixed(1));
+    roofLine.setAttribute('stroke', 'rgba(255,255,255,0.4)');
+    roofLine.setAttribute('stroke-width', '1');
+    tg.appendChild(roofLine);
+
+    // ── Lobby entrance ──
+    var base = floorAt(0);
+    var ent = document.createElementNS(ns, 'rect');
+    ent.setAttribute('x', (base.cx - 10).toFixed(1));
+    ent.setAttribute('y', (base.y - 20).toFixed(1));
+    ent.setAttribute('width', '20');
+    ent.setAttribute('height', '20');
+    ent.setAttribute('rx', '2');
+    ent.setAttribute('fill', 'rgba(255,255,255,0.2)');
+    tg.appendChild(ent);
+
+    svg.appendChild(tg);
+  })();
+  </script>
 
 </body>
 </html>
