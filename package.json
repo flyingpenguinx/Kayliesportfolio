@@ -1,0 +1,9 @@
+{
+  "name": "kaylie-rivera-portfolio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "check": "node --check book.js && node --check book-model.js && node --check page-renderer.js && node --check figure-data.js && node --check portfolio-data.js"
+  }
+}
