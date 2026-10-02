@@ -82,7 +82,7 @@ main { width: 100%; max-width: 2000px; min-width: 0; min-height: 0; margin: auto
 .section-tabs { position: absolute; left: 100%; top: 3%; display: flex; flex-direction: column; gap: 3px; z-index: 5; }
 .section-tab { display: flex; align-items: center; justify-content: center; position: relative; width: 26px; min-height: 26px; background: var(--section-color); border-radius: 0 5px 5px 0; color: #20212d; border: 1px solid #33374715; border-left: 0; transition: width .15s, box-shadow .15s; }
 .section-tab[data-section="resume"], .section-tab[data-section="mixed-use-development"], .section-tab[data-section="design-village-2026"], .section-tab[data-section="japan-study-abroad"] { color: white; }
-.contents-tab { color: var(--ink); box-shadow: 2px 2px 5px #33374724; border-color: #d7d4cf; }
+.cover-tab { color: var(--ink); box-shadow: 2px 2px 5px #33374724; border-color: #d7d4cf; }
 .section-number { font-size: 10px; }
 .section-label { position: absolute; right: calc(100% + 6px); padding: 5px 8px; background: var(--navy); color: #fff; font-size: 11px; border-radius: 3px; white-space: nowrap; opacity: 0; pointer-events: none; }
 .section-tab:hover, .section-tab:focus-visible, .section-tab[aria-current="location"] { width: 32px; box-shadow: 1px 2px 5px #33374724; }

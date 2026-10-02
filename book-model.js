@@ -13,6 +13,11 @@ export const sections = [
   { id: "thank-you", label: "Thank you", start: 19, end: 19, range: "19", color: "#bfc1c5" },
 ];
 
+export const bookmarks = [
+  { id: "cover", label: "Portfolio cover", range: "", color: "#ffffff" },
+  ...sections,
+];
+
 const aliases = { about: "resume", work: "scholars-village", contact: "thank-you" };
 
 export const pageDimensions = { width: 792, height: 612 };

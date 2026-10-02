@@ -1,5 +1,5 @@
-import { pages, sections, pageIndexFromHash, adjacentPage, viewForPage, turnPlan, fitBook, fitImage, pageNumber, spreadLabel, sectionForPage, pageLabel } from "./book-model.js?v=a73402445041";
-import { renderPageSurface, renderPageHotspots, figures } from "./page-renderer.js?v=8aac276601e4";
+import { pages, sections, bookmarks, pageIndexFromHash, adjacentPage, viewForPage, turnPlan, fitBook, fitImage, pageNumber, spreadLabel, sectionForPage, pageLabel } from "./book-model.js?v=ed28c3192de4";
+import { renderPageSurface, renderPageHotspots, figures } from "./page-renderer.js?v=be574da66fe2";
 
 const book = document.getElementById("book");
 const stage = document.querySelector(".book-stage");
@@ -157,8 +157,9 @@ function renderSpread(index) {
       : "Turn with arrows. Click images to enlarge.";
   renderTranscript(index);
   const activeSection = sectionForPage(index);
+  const activeBookmark = index === 0 ? "cover" : index === 1 && !singlePage ? "resume" : activeSection?.id;
   for (const link of sectionTabs.children) {
-    const active = link.dataset.section === (index === 1 ? "contents" : activeSection?.id);
+    const active = link.dataset.section === activeBookmark;
     if (active) link.setAttribute("aria-current", "location");
     else link.removeAttribute("aria-current");
   }
@@ -335,15 +336,14 @@ pageSelect.replaceChildren(...pages.map((page, index) => {
   return option;
 }));
 
-const bookmarks = [{ id: "contents", label: "Table of contents", range: "00", color: "#ffffff" }, ...sections];
 bookmarks.forEach((section, row) => {
   const link = document.createElement("a");
-  link.className = `section-tab${row === 0 ? " contents-tab" : ""}`;
+  link.className = `section-tab${row === 0 ? " cover-tab" : ""}`;
   link.href = `#${section.id}`;
   link.dataset.pageLink = "";
   link.dataset.section = section.id;
   link.style.setProperty("--section-color", section.color);
-  link.setAttribute("aria-label", `${section.label}, portfolio pages ${section.range}`);
+  link.setAttribute("aria-label", row === 0 ? "Close book and return to portfolio cover" : `${section.label}, portfolio pages ${section.range}`);
   link.title = section.label;
   const number = document.createElement("span");
   number.className = "section-number";

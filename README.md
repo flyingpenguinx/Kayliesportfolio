@@ -22,7 +22,7 @@ For a server-free preview, run `npm.cmd run preview`. It writes a self-contained
 - Previous / Next, Left / Right arrow keys, Page Up / Page Down, and horizontal touch swipes turn the pages.
 - The cover opens in 1.05 seconds. Paper turns take 820ms on desktop and 700ms on mobile. Cover and leaves share the same spine and use the correct front/back artwork.
 - The top-left name/title and Home close the book back to its cover. End opens the final page.
-- The white **00** bookmark always returns to the contents. This is an interface shortcut, not a change to the PDF's printed numbering. The original contents rows are clickable, and their printed page ranges are preserved. The sheet counter includes all 20 PDF sheets, including the cover.
+- The white **00** bookmark closes the book and returns to its cover. **01** still opens the resume (alongside the contents on desktop). Bookmark numbers are interface shortcuts, not changes to the PDF's printed numbering. The original contents rows are clickable, and their printed page ranges are preserved. The sheet counter includes all 20 PDF sheets, including the cover.
 - Click a photograph, diagram, logo, or the resume QR code to enlarge that specific image in a popup. Click elsewhere on an interior page, or use **Enlarge page**, to view the whole page.
 - The popup preserves the image's proportions and fits it inside the window without internal scrolling. Close it using **Close**, Escape, or the slightly blurred background. The QR image is a lossless, pixel-identical PNG copy of the original embedded QR, enlarged with crisp pixels and a white quiet zone.
 - Contents and image links also work inside the full-page popup. Phone and email links remain clickable.
@@ -39,8 +39,11 @@ Proportions take priority over filling every pixel of the screen. Space around t
 - [page-renderer.js](page-renderer.js): original page images and invisible interactive hit areas. No artwork text is recreated or overlaid.
 - [figure-data.js](figure-data.js) and [assets/figures](assets/figures): original picture regions and enlarged-image assets, including the lossless QR.
 - [portfolio-data.js](portfolio-data.js) and [assets/pages](assets/pages): original full-page artwork and extracted text.
+- [assets/favicon.svg](assets/favicon.svg): scalable KR tab/search icon with the eight portfolio colors. Letters are drawn as paths so the icon does not depend on installed fonts.
 
 Deploy these files and the original PDF with [CNAME](CNAME). All production URLs are relative. If the PDF changes, re-render its full pages and picture crops, and update metadata, printed contents ranges, and image hit areas. Replacing only the PDF does not update the book.
+
+The search description and footer read "Kaylie Rivera's portfolio. Click to see more." Google can choose its own snippet and caches both descriptions and favicons; updates appear only after deployment and recrawling. Request indexing for the homepage in Google Search Console to help Google discover changes.
 
 ### Updating the published site
 

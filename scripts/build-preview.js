@@ -12,7 +12,7 @@ const scripts = [];
 
 function asset(name) {
   if (!assets.has(name)) {
-    const mime = name.endsWith(".webp") ? "image/webp" : name.endsWith(".png") ? "image/png" : "image/jpeg";
+    const mime = name.endsWith(".svg") ? "image/svg+xml" : name.endsWith(".webp") ? "image/webp" : name.endsWith(".png") ? "image/png" : "image/jpeg";
     assets.set(name, `data:${mime};base64,${readFileSync(resolve(root, name)).toString("base64")}`);
   }
   return assets.get(name);

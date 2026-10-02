@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import test from "node:test";
-import { pages, sections, pageDimensions, fitBook, fitImage, pageIndexFromHash, adjacentPage, spreadForPage, viewForPage, turnPlan, pageNumber, spreadLabel, sectionForPage, pageLabel, contentsBounds } from "./book-model.js";
+import { pages, sections, bookmarks, pageDimensions, fitBook, fitImage, pageIndexFromHash, adjacentPage, spreadForPage, viewForPage, turnPlan, pageNumber, spreadLabel, sectionForPage, pageLabel, contentsBounds } from "./book-model.js";
 import { figures } from "./figure-data.js";
 
 test("all 20 PDF pages have unique, addressable IDs and rendered artwork", async () => {
@@ -160,7 +160,23 @@ test("deep links, old site links, and malformed links are handled explicitly", (
   assert.equal(pageIndexFromHash("#toString"), null);
 });
 
-test("00 remains a contents shortcut while body labels match the printed PDF", () => {
+test("00 opens the cover and 01 keeps the contents/resume spread", () => {
+  assert.equal(bookmarks.length, sections.length + 1);
+  assert.equal(bookmarks[0].id, "cover");
+  assert.equal(bookmarks[0].label, "Portfolio cover");
+  assert.equal(bookmarks[1].id, "resume");
+  assert.deepEqual(bookmarks.slice(1), sections);
+  const cover = pageIndexFromHash(`#${bookmarks[0].id}`);
+  const resume = pageIndexFromHash(`#${bookmarks[1].id}`);
+  assert.equal(cover, 0);
+  assert.equal(resume, 2);
+  assert.deepEqual(viewForPage(cover), { left: null, right: 0 });
+  assert.deepEqual(viewForPage(cover, true), { left: null, right: 0 });
+  assert.deepEqual(viewForPage(resume), { left: 1, right: 2 });
+  assert.deepEqual(viewForPage(resume, true), { left: null, right: 2 });
+});
+
+test("body labels still match the printed PDF independently of bookmark numbers", () => {
   assert.equal(pageLabel(0), "Cover");
   assert.equal(pageLabel(1), "Table of contents / 00");
   assert.equal(pageLabel(2), "Resume / 02");

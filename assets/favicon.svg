@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">Kaylie Rivera — KR with portfolio colors</title>
+  <rect width="64" height="64" rx="12" fill="#f2f0ec" />
+  <g>
+    <rect x="8" y="10" width="6" height="4" rx="1" fill="#9b4960" />
+    <rect x="8" y="16" width="6" height="4" rx="1" fill="#7d8274" />
+    <rect x="8" y="22" width="6" height="4" rx="1" fill="#9dc7f3" />
+    <rect x="8" y="28" width="6" height="4" rx="1" fill="#97684c" />
+    <rect x="8" y="34" width="6" height="4" rx="1" fill="#323246" />
+    <rect x="8" y="40" width="6" height="4" rx="1" fill="#a26ab5" />
+    <rect x="8" y="46" width="6" height="4" rx="1" fill="#bd5c3c" />
+    <rect x="8" y="52" width="6" height="4" rx="1" fill="#bfc1c5" />
+  </g>
+  <g fill="none" stroke="#323246" stroke-width="4" stroke-linecap="square" stroke-linejoin="round">
+    <path d="M23 21v22m14-22L23 33l14 10" />
+    <path d="M44 43V21h6a6 6 0 0 1 0 12h-6m6 0 7 10" />
+  </g>
+</svg>
