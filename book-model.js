@@ -1,4 +1,4 @@
-import { pages } from "./portfolio-data.js";
+import { pages } from "./portfolio-data.js?v=4ae76f049dfe";
 
 export { pages };
 

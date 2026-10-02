@@ -14,6 +14,8 @@ python -m http.server 4173 --bind 127.0.0.1
 
 Open `http://127.0.0.1:4173`. The source site uses JavaScript modules, so opening the source HTML directly is not supported.
 
+For a server-free preview, run `npm.cmd run preview`. It writes a self-contained HTML file to the temporary directory and prints its path. Use this updated preview tool instead of the older attached `build-preview.cjs` snapshot; the older tool does not understand versioned module URLs. A self-contained preview does not test HTTPS caching, so verify deployment on the actual published site as well.
+
 ## Reading the book
 
 - The book starts closed with the original front cover. Clicking the cover or **Open book** reveals the contents and resume together on desktop, or the contents alone on mobile.
@@ -39,6 +41,22 @@ Proportions take priority over filling every pixel of the screen. Space around t
 - [portfolio-data.js](portfolio-data.js) and [assets/pages](assets/pages): original full-page artwork and extracted text.
 
 Deploy these files and the original PDF with [CNAME](CNAME). All production URLs are relative. If the PDF changes, re-render its full pages and picture crops, and update metadata, printed contents ranges, and image hit areas. Replacing only the PDF does not update the book.
+
+### Updating the published site
+
+GitHub Pages caches static files, so a browser can temporarily reuse the old stylesheet with newly deployed HTML or JavaScript. The reader now uses content-specific cache keys for its stylesheet, entry script, and every runtime module import.
+
+After editing the site, run:
+
+```powershell
+npm.cmd run version-assets
+npm.cmd test
+npm.cmd run check
+```
+
+Commit the updated HTML, module imports, and changed files together, then push. No build is required on GitHub Pages. The checks reject stale cache versions so future changes do not accidentally reuse an old asset URL.
+
+After this first cache-versioning deployment, use **Ctrl+Shift+R** once to refresh any old HTML already cached by the browser. Fresh assets are verified against the actual HTTPS site, not just the self-contained local preview.
 
 ## Checks
 

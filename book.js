@@ -1,5 +1,5 @@
-import { pages, sections, pageIndexFromHash, adjacentPage, viewForPage, turnPlan, fitBook, fitImage, pageNumber, spreadLabel, sectionForPage, pageLabel } from "./book-model.js";
-import { renderPageSurface, renderPageHotspots, figures } from "./page-renderer.js";
+import { pages, sections, pageIndexFromHash, adjacentPage, viewForPage, turnPlan, fitBook, fitImage, pageNumber, spreadLabel, sectionForPage, pageLabel } from "./book-model.js?v=a73402445041";
+import { renderPageSurface, renderPageHotspots, figures } from "./page-renderer.js?v=8aac276601e4";
 
 const book = document.getElementById("book");
 const stage = document.querySelector(".book-stage");

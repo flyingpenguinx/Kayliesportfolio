@@ -3,7 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "version-assets": "node scripts/version-assets.js",
+    "preview": "node scripts/build-preview.js",
     "test": "node --test",
-    "check": "node --check book.js && node --check book-model.js && node --check page-renderer.js && node --check figure-data.js && node --check portfolio-data.js"
+    "check": "node --check book.js && node --check book-model.js && node --check page-renderer.js && node --check figure-data.js && node --check portfolio-data.js && node scripts/version-assets.js --check"
   }
 }

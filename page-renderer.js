@@ -1,5 +1,5 @@
-import { pages, sections, contentsBounds } from "./book-model.js";
-import { figures } from "./figure-data.js";
+import { pages, sections, contentsBounds } from "./book-model.js?v=a73402445041";
+import { figures } from "./figure-data.js?v=e22a73c0d59a";
 
 export { figures };
 
